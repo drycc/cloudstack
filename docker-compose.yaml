@@ -1,0 +1,31 @@
+version: '3'
+services:
+  mysql:
+    restart: always
+    image: mysql:8.1
+    volumes:
+    - ./mysql/logs:/var/log/mysql:rw
+    - ./mysql/data:/var/lib/mysql:rw
+    - ./mysql/etc/my.cnf:/root/.my.cnf:ro
+    - ./mysql/initdb.d:/docker-entrypoint-initdb.d:ro
+    - ./mysql/etc/conf.d/cloudstack.cnf:/etc/mysql/conf.d/cloudstack.cnf:ro 
+    environment:
+    - TZ
+    - MYSQL_ROOT_PASSWORD
+    network_mode: host
+
+  management:
+    build: management
+    image: registry.drycc.cc/drycc/cloudstack-management
+    privileged: true
+    volumes:
+    - ./management/data/exports:/exports:rw
+    - ./management/data/etc/default/cloudstack:/etc/default/cloudstack:rw
+    depends_on:
+    - mysql
+    environment:
+    - CLOUDSTACK_DB_NAME
+    - CLOUDSTACK_DB_PASS
+    - MYSQL_ROOT_PASSWORD
+    network_mode: host
+

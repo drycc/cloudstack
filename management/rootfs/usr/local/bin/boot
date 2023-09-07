@@ -1,0 +1,19 @@
+#!/usr/bin/env bash
+#
+# This script is designed to be run inside the container
+#
+
+# fail hard and fast even on pipelines
+set -eo pipefail
+sleep 60s
+
+
+if [[ $(ls /etc/default/cloudstack | wc -l) -gt 0 ]]; then
+  rm -rf /etc/cloudstack/*
+  cp -rf /etc/default/cloudstack/* /etc/cloudstack/
+else
+  cloudstack-setup-databases ${CLOUDSTACK_DB_NAME}:${CLOUDSTACK_DB_PASS}@127.0.0.1 --deploy-as=root:${MYSQL_ROOT_PASSWORD}
+  cp -rf /etc/cloudstack/* /etc/default/cloudstack/
+fi
+source /etc/default/cloudstack-management
+/usr/bin/java $JAVA_DEBUG $JAVA_OPTS -cp $CLASSPATH $BOOTSTRAP_CLASS
