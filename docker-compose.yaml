@@ -14,6 +14,14 @@ services:
     - MYSQL_ROOT_PASSWORD
     network_mode: host
 
+  nfs-server:
+    build: nfs-server
+    image: registry.drycc.cc/drycc/nfs-server
+    privileged: true
+    volumes:
+    - ./nfs-server/data/exports:/exports:rw
+    network_mode: host
+
   management:
     build: management
     image: registry.drycc.cc/drycc/cloudstack-management
@@ -23,6 +31,7 @@ services:
     - ./management/data/etc/default/cloudstack:/etc/default/cloudstack:rw
     depends_on:
     - mysql
+    - nfs-server
     environment:
     - CLOUDSTACK_DB_NAME
     - CLOUDSTACK_DB_PASS
