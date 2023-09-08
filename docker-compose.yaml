@@ -15,6 +15,7 @@ services:
     network_mode: host
 
   nfs-server:
+    restart: always
     build: nfs-server
     image: registry.drycc.cc/drycc/nfs-server
     privileged: true
@@ -23,6 +24,7 @@ services:
     network_mode: host
 
   management:
+    restart: always
     build: management
     image: registry.drycc.cc/drycc/cloudstack-management
     privileged: true
