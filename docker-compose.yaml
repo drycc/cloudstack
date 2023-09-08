@@ -27,7 +27,7 @@ services:
     image: registry.drycc.cc/drycc/cloudstack-management
     privileged: true
     volumes:
-    - ./management/data/exports:/exports:rw
+    - ./nfs-server/data/exports:/exports:rw
     - ./management/data/etc/default/cloudstack:/etc/default/cloudstack:rw
     depends_on:
     - mysql

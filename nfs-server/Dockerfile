@@ -1,8 +1,9 @@
 FROM registry.drycc.cc/drycc/base:bookworm
 
-RUN install-packages openssl nfs-kernel-server && \
-    rm -rf /var/lib/apt/lists/* && \
-    mkdir /exports
+RUN sed -i 's#archive.ubuntu.com#mirrors.aliyun.com#g' /etc/apt/sources.list \ 
+  && install-packages openssl nfs-kernel-server \
+  && rm -rf /var/lib/apt/lists/* \
+  && mkdir /exports
 
 ADD rootfs /
 RUN chmod +rx /entrypoint.sh

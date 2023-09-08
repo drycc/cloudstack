@@ -13,6 +13,7 @@ if [[ $(ls /etc/default/cloudstack | wc -l) -gt 0 ]]; then
   cp -rf /etc/default/cloudstack/* /etc/cloudstack/
 else
   cloudstack-setup-databases ${CLOUDSTACK_DB_NAME}:${CLOUDSTACK_DB_PASS}@127.0.0.1 --deploy-as=root:${MYSQL_ROOT_PASSWORD}
+  /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /exports/secondary -u http://drycc-mirrors.drycc.cc/cloudstack/systemvm/4.18/systemvmtemplate-4.18.0-kvm.qcow2.bz2 -h kvm -F
   cp -rf /etc/cloudstack/* /etc/default/cloudstack/
 fi
 source /etc/default/cloudstack-management
