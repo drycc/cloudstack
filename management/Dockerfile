@@ -2,7 +2,8 @@ FROM ubuntu:22.04
 
 ENV CLOUDSTACK_VERSION 4.18
 
-RUN sed -i 's#archive.ubuntu.com#mirrors.aliyun.com#g' /etc/apt/sources.list \
+ARG APT_MIRROR
+RUN sed -i "s#archive.ubuntu.com#${APT_MIRROR}#g" /etc/apt/sources.list \ 
   && apt-get update -qq \
   && apt-get install wget lsb-core curl gpg -y --no-install-recommends \
   && curl -fsSL http://download.cloudstack.org/release.asc | gpg --dearmor -o /etc/apt/keyrings/cloudstack.gpg \

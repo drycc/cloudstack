@@ -1,6 +1,8 @@
-FROM registry.drycc.cc/drycc/base:bookworm
+ARG CODENAME
+FROM registry.drycc.cc/drycc/base:${CODENAME}
 
-RUN sed -i 's#archive.ubuntu.com#mirrors.aliyun.com#g' /etc/apt/sources.list \ 
+ARG APT_MIRROR
+RUN sed -i -r "s#deb.debian.org#${APT_MIRROR}#g" /etc/apt/sources.list \ 
   && install-packages openssl nfs-kernel-server \
   && rm -rf /var/lib/apt/lists/* \
   && mkdir /exports
