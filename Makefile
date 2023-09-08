@@ -5,8 +5,11 @@ APT_MIRROR      ?= mirrors.cloud.tencent.com
 up:
 	docker-compose --env-file environment up -d
 
+down:
+	docker-compose --env-file environment down
+
 build:
-	docker-compose build  --build-arg CODENAME=$(CODENAME) --build-arg APT_MIRROR=$(APT_MIRROR)
+	docker-compose --env-file environment build --build-arg CODENAME=$(CODENAME) --build-arg APT_MIRROR=$(APT_MIRROR)
 
 clean:
 	@rm -rf mysql/logs/*
