@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-apt install htop lynx duf bridge-utils -y
+apt install htop lynx duf bridge-utils openntpd openssh-server sudo vim htop tar intel-microcode -y
 
 systemctl enable serial-getty@ttyS0.service
 systemctl start serial-getty@ttyS0.service
