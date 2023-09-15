@@ -22,5 +22,6 @@ prepare-management:
 clean:
 	@rm -rf mysql/logs/*
 	@rm -rf mysql/data/*
+	@rm -rf management/data/root/*
 	@rm -rf management/data/etc/default/cloudstack/*
 	@rm -rf nfs-server/data/exports/{primary,secondary}/*

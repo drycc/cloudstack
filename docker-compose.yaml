@@ -30,6 +30,7 @@ services:
     privileged: true
     volumes:
     - ./nfs-server/data/exports:/exports:rw
+    - ./management/data/root:/root:rw
     - ./management/data/etc/default/cloudstack:/etc/default/cloudstack:rw
     depends_on:
     - mysql
