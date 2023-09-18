@@ -1,5 +1,7 @@
 CODENAME           ?= bookworm
+AGENT_IP           ?= 127.0.0.1
 APT_MIRROR         ?= mirrors.cloud.tencent.com
+DOCKER_MIRROR      ?= https://mirrors.aliyun.com/docker-ce/linux/ubuntu
 UBUNTU_VERSION     ?= 22.04
 CLOUDSTACK_VERSION ?= 4.18.1
 
@@ -17,7 +19,7 @@ prepare-agent:
 	CLOUDSTACK_VERSION=$(CLOUDSTACK_VERSION) scripts/prepare-agent.sh
 
 prepare-management:
-	scripts/prepare-management.sh
+	DOCKER_MIRROR=$(DOCKER_MIRROR) scripts/prepare-management.sh
 
 clean:
 	@rm -rf mysql/logs/*
