@@ -16,6 +16,7 @@ build:
 	docker-compose --env-file environment build --build-arg CODENAME=$(CODENAME) --build-arg APT_MIRROR=$(APT_MIRROR) --build-arg UBUNTU_VERSION=$(UBUNTU_VERSION) --build-arg CLOUDSTACK_VERSION=$(CLOUDSTACK_VERSION)
 
 prepare-agent:
+	ssh-keygen -q -N " " -f ~/.ssh/id_rsa.cloud
 	CLOUDSTACK_VERSION=$(CLOUDSTACK_VERSION) scripts/prepare-agent.sh
 
 prepare-management:
