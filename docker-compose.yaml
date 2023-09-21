@@ -30,12 +30,15 @@ services:
     privileged: true
     volumes:
     - ./nfs-server/data/exports:/exports:rw
-    - ./management/data/root:/root:rw
+    - ./management/data/home:/var/lib/cloudstack:rw
+    - ./management/data/logs:/var/log/cloudstack:rw
     - ./management/data/etc/default/cloudstack:/etc/default/cloudstack:rw
     depends_on:
     - mysql
     - nfs-server
     environment:
+    - CLOUDSTACK_DB_HOST
+    - CLOUDSTACK_DB_PORT
     - CLOUDSTACK_DB_NAME
     - CLOUDSTACK_DB_PASS
     - MYSQL_ROOT_PASSWORD

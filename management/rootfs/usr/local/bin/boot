@@ -5,8 +5,13 @@
 
 # fail hard and fast even on pipelines
 set -eo pipefail
-sleep 60s
 
+env
+echo "Waiting mysql ${CLOUDSTACK_DB_HOST}:${CLOUDSTACK_DB_PORT} ..."
+
+while ! nc -w 5 -z ${CLOUDSTACK_DB_HOST} ${CLOUDSTACK_DB_PORT}; do
+  sleep 0.1 # wait for 1/10 of the second before check again
+done
 
 major=$(echo ${CLOUDSTACK_VERSION} | awk -F '.' '{print $1"."$2}')
 
@@ -14,9 +19,12 @@ if [[ $(ls /etc/default/cloudstack | wc -l) -gt 0 ]]; then
   rm -rf /etc/cloudstack/*
   cp -rf /etc/default/cloudstack/* /etc/cloudstack/
 else
-  cloudstack-setup-databases ${CLOUDSTACK_DB_NAME}:${CLOUDSTACK_DB_PASS}@127.0.0.1 --deploy-as=root:${MYSQL_ROOT_PASSWORD}
+  cloudstack-setup-databases ${CLOUDSTACK_DB_NAME}:${CLOUDSTACK_DB_PASS}@${CLOUDSTACK_DB_HOST}:${CLOUDSTACK_DB_PORT} --deploy-as=root:${MYSQL_ROOT_PASSWORD}
   /usr/share/cloudstack-common/scripts/storage/secondary/cloud-install-sys-tmplt -m /exports/secondary -u http://drycc-mirrors.drycc.cc/cloudstack/systemvm/$major/systemvmtemplate-$CLOUDSTACK_VERSION-kvm.qcow2.bz2 -h kvm -F
   cp -rf /etc/cloudstack/* /etc/default/cloudstack/
 fi
 source /etc/default/cloudstack-management
-/usr/bin/java $JAVA_DEBUG $JAVA_OPTS -cp $CLASSPATH $BOOTSTRAP_CLASS
+
+mkdir -p /var/lib/cloudstack/management
+chown -hR $CLOUD_GID:$CLOUD_UID /var/lib/cloudstack /var/log/cloudstack /etc/cloudstack
+gosu $CLOUD_GID /usr/bin/java $JAVA_DEBUG $JAVA_OPTS -cp $CLASSPATH $BOOTSTRAP_CLASS
