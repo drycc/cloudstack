@@ -33,6 +33,7 @@ services:
     - ./management/data/home:/var/lib/cloudstack:rw
     - ./management/data/logs:/var/log/cloudstack:rw
     - ./management/data/etc/default/cloudstack:/etc/default/cloudstack:rw
+    - ./management/config/cloudstack-configuration.properties:/etc/default/cloudstack/management/cloudstack-configuration.properties:r
     depends_on:
     - mysql
     - nfs-server

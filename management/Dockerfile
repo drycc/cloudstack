@@ -19,7 +19,7 @@ RUN sed -i -E "s#[a-z]{1,}.ubuntu.com#${APT_MIRROR}#g" /etc/apt/sources.list \
   && echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/cloudstack.gpg] ${CLOUDSTACK_DOWNLOAD_URL}/ubuntu $(lsb_release -cs) ${major}" \
     > /etc/apt/sources.list.d/cloudstack.list \
   && apt-get update \
-  && apt-get install netcat gosu cloudstack-management ssh-client -y
+  && apt-get install uuid netcat gosu cloudstack-management ssh-client -y
 
 ADD rootfs /
 

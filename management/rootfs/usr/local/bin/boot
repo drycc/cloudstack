@@ -6,7 +6,13 @@
 # fail hard and fast even on pipelines
 set -eo pipefail
 
-env
+function set_default_configuration(){
+  while ! nc -w 5 -z 127.0.0.1 8080; do
+    sleep 0.1 # wait for 1/10 of the second before check again
+  done
+  cloudstack-update-configuration /etc/cloudstack/management/cloudstack-configuration.properties
+}
+
 echo "Waiting mysql ${CLOUDSTACK_DB_HOST}:${CLOUDSTACK_DB_PORT} ..."
 
 while ! nc -w 5 -z ${CLOUDSTACK_DB_HOST} ${CLOUDSTACK_DB_PORT}; do
@@ -26,5 +32,10 @@ fi
 source /etc/default/cloudstack-management
 
 mkdir -p /var/lib/cloudstack/management
+
+set_default_configuration &
+
 chown -hR $CLOUD_GID:$CLOUD_UID /var/lib/cloudstack /var/log/cloudstack /etc/cloudstack
 gosu $CLOUD_GID /usr/bin/java $JAVA_DEBUG $JAVA_OPTS -cp $CLASSPATH $BOOTSTRAP_CLASS
+wait
+

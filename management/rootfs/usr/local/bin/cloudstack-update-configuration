@@ -1,0 +1,38 @@
+#!/usr/bin/env python3
+
+import os
+import sys
+from contextlib import closing
+from mysql import connector
+
+
+def connect():
+    return connector.connect(
+        host=os.environ.get("CLOUDSTACK_DB_HOST"),
+        port=3306,
+        user='root',
+        passwd=os.environ.get("MYSQL_ROOT_PASSWORD"),
+        db='cloud'
+    )
+
+
+def update_configuration(key, value):
+    with closing(connect()) as conn:
+        with closing(conn.cursor()) as cursor:
+            cursor.execute(
+                f"UPDATE configuration set value='{value}' WHERE name='{key}'"
+            )
+            conn.commit()
+
+
+if __name__ == "__main__":
+    length = 79
+    print("-" * length)
+    with open(sys.argv[1], "r") as file:
+        for line in file:
+            line = line.strip("\r\n")
+            key, value = line.split("=")
+            update_configuration(key, value)
+            print("| " + line + " " * (length - len(line) - 3) + "|")
+    print("-" * 79)
+
